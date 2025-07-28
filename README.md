@@ -26,14 +26,5 @@ You need to resize window size for more larger pallete.
 
 If you reduce the window size than the palette you drew, the picture beyond the window size will be erased.
 
-## Key Bindings
-### Export by Image
-**cmd+s**
-### Import by Image
-**cmd+i**
-Image will saved in desktop directory. as png file.  
-paint_[TimeStamp as ISO format].png
-### Undo
-**cmd+z**
-### Redo
-**cmd+shift+z**
+### Export / Import
+You can export Image by png. also can import.
