@@ -35,9 +35,8 @@
 </script>
 
 <div>
-    <div>
+    <div class="shadow">
         <!--Tool bar-->
-        <div>
             <div class="h-fit mx-left">
                 <span>Select color</span>
                 <input type="color" bind:this={colorPicker} class="border">
@@ -53,8 +52,6 @@
                     <option value="20">20</option>
                 </select>
             </div>
-
-        </div>
     </div>
     <CoreCanvas lineWidth={lineWidth} color={color}></CoreCanvas>
 
