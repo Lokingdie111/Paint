@@ -1,5 +1,5 @@
 # Paint
-
+<img width="828" height="637" alt="Image" src="https://github.com/user-attachments/assets/769ba5e7-f948-4a3a-9720-629b07768c60" />
 # Introduce
 This program is just simple painting app.  
 Becuase I want some smiple and light painting program like in Windows.
