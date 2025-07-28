@@ -1,7 +1,7 @@
 <script lang="ts">
     import { onMount, tick } from "svelte";
     import { Color } from "$lib/Color"
-
+    import { invoke } from "@tauri-apps/api/core";
     let canvas: HTMLCanvasElement;
     let ctx: CanvasRenderingContext2D | null;
 
@@ -38,13 +38,18 @@
     function keyDownHandler(e: KeyboardEvent) {
         if (pressedKeys.has(e.key.toLowerCase()) == false) {
             pressedKeys.add(e.key.toLowerCase());
-            // check cmd+z
+            // check cmd+z & cmd+shift+z
             if (pressedKeys.has("z") && pressedKeys.has("meta")) {
                 if (pressedKeys.has("shift")) {
                     reRollback();
                 } else {
                     rollback();
                 }
+            } else if (pressedKeys.has("meta") && pressedKeys.has("s")) {
+                // check cmd+s
+                downloadFullCanvas();
+            } else if (pressedKeys.has("meta") && pressedKeys.has("i")) {
+                // check cmd+i
             }
         }
 
@@ -57,7 +62,6 @@
 
     function moveHandler(e: MouseEvent) {
         if (isDrawing) {
-            console.log("MOUSE MOVE!");
             if (ctx) {
                 ctx.lineTo(e.offsetX, e.offsetY);
                 ctx.stroke(); 
@@ -89,7 +93,6 @@
 
     async function rollback() {
         if (ctx && datasCursor != 0) {
-            console.log("ROLLBACK", datas, datasCursor);
             const prevData = datas[datasCursor - 1];
             datasCursor--;
             ctx.clearRect(0,0,canvas.width, canvas.height);
@@ -139,6 +142,37 @@
         } else {
             console.log("NO CTX");
         }
+    }
+
+    function downloadFullCanvas() {
+        if (!canvas) return;
+        
+        canvas.toBlob(async (blob) => {
+            if (blob) {
+                try {
+                    // Convert blob to base64
+                    const reader = new FileReader();
+                    reader.onload = async () => {
+                        const base64Data = reader.result as string;
+                        
+                        // Call Tauri command
+                        const result = await invoke('save_image', {
+                            request: {
+                                image_data: base64Data,
+                                filename: `paint_${new Date().toISOString().slice(0, 19).replace(/:/g, '-')}.png`
+                            }
+                        });
+                        
+                        console.log('Image saved:', result);
+                        alert('이미지가 데스크톱에 저장되었습니다!');
+                    };
+                    reader.readAsDataURL(blob);
+                } catch (error) {
+                    console.error('Save error:', error);
+                    alert('이미지 저장에 실패했습니다!');
+                }
+            }
+        }, "image/png");
     }
     onMount(() => {
         ctx = canvas.getContext("2d");
