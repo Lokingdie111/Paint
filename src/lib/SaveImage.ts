@@ -1,5 +1,6 @@
 import { create } from "@tauri-apps/plugin-fs";
 import { save } from "@tauri-apps/plugin-dialog";
+import { readFile } from "@tauri-apps/plugin-fs";
 
 export async function saveImage(blob: Blob) {
 

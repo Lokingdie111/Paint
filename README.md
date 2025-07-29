@@ -29,3 +29,7 @@ If you reduce the window size than the palette you drew, the picture beyond the 
 ### Export
 You can export your paint to png file.  
 by press cmd+s.
+### Import
+You can import png image to paint.  
+by press cmd+e.  
+Imported Image will be overwirte in your pallete.

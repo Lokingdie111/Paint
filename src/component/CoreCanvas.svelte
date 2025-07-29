@@ -2,6 +2,7 @@
     import { onMount, tick } from "svelte";
     import { Color } from "$lib/Color"
     import { saveImage } from "$lib/SaveImage";
+    import { importImage } from "$lib/ImportImage";
 
     let canvas: HTMLCanvasElement;
     let ctx: CanvasRenderingContext2D | null;
@@ -18,7 +19,8 @@
     let pressedKeys: Set<string> = new Set();
 
     $: {
-        console.log("VALUE CHANGED!", color, lineWidth);
+        color;
+        lineWidth;
         updateColor();
         updateLineWidth();
     };
@@ -46,6 +48,7 @@
                 } else {
                     rollback();
                 }
+                pressedKeys.clear();
             } else if (pressedKeys.has("meta") && pressedKeys.has("s")) {
                 canvas.toBlob((blob) => {
                     if (blob) {
@@ -54,6 +57,24 @@
                         console.log("FAILED TO GET BLOB DATA...");
                     }
                 }, "image/png");
+                pressedKeys.clear();
+            } else if (pressedKeys.has("meta") && pressedKeys.has("e")) {
+                importImage((blob) => {
+                    const imgURL = URL.createObjectURL(blob);
+                    let img = new Image();
+                    img.src = imgURL;
+                    img.onload = () => {
+                        if (ctx) {
+                            ctx.drawImage(img, 0, 0);
+                            console.log("IMage drawed.");
+                            URL.revokeObjectURL(imgURL);
+                        } else {
+                            console.log("NO CTX.");
+                        }
+                    };
+
+                });
+                pressedKeys.clear();
             }
         }
 
