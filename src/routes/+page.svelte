@@ -2,6 +2,8 @@
     import { onMount } from "svelte";
     import CoreCanvas from "../component/CoreCanvas.svelte";
     import { Color } from "$lib/Color";
+    import { save } from "@tauri-apps/plugin-dialog";
+    import { create, BaseDirectory } from "@tauri-apps/plugin-fs"; 
 
     let color = new Color(0, 0, 0);
     let lineWidth = 5;

@@ -26,5 +26,6 @@ You need to resize window size for more larger pallete.
 
 If you reduce the window size than the palette you drew, the picture beyond the window size will be erased.
 
-### Export / Import
-You can export Image by png. also can import.
+### Export
+You can export your paint to png file.  
+by press cmd+s.

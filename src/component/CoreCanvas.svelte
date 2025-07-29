@@ -1,6 +1,7 @@
 <script lang="ts">
     import { onMount, tick } from "svelte";
     import { Color } from "$lib/Color"
+    import { saveImage } from "$lib/SaveImage";
 
     let canvas: HTMLCanvasElement;
     let ctx: CanvasRenderingContext2D | null;
@@ -45,6 +46,14 @@
                 } else {
                     rollback();
                 }
+            } else if (pressedKeys.has("meta") && pressedKeys.has("s")) {
+                canvas.toBlob((blob) => {
+                    if (blob) {
+                        saveImage(blob);
+                    } else {
+                        console.log("FAILED TO GET BLOB DATA...");
+                    }
+                }, "image/png");
             }
         }
 
@@ -92,7 +101,7 @@
             console.log("ROLLBACK", datas, datasCursor);
             const prevData = datas[datasCursor - 1];
             datasCursor--;
-            ctx.clearRect(0,0,canvas.width, canvas.height);
+            ctx.fillRect(0,0,canvas.width, canvas.height);
             await tick();
             ctx.putImageData(prevData, 0, 0);
         }
@@ -104,7 +113,7 @@
             if (ctx) {
                 const DATA = datas[datasCursor + 1];
                 datasCursor++;
-                ctx.clearRect(0,0,canvas.width, canvas.height);
+                ctx.fillRect(0,0,canvas.width, canvas.height);
                 await tick();
                 ctx.putImageData(DATA, 0, 0);
             }
@@ -132,6 +141,8 @@
 
         if (ctx) {
             ctx.lineWidth = lineWidth;
+            ctx.fillStyle = "white";
+            ctx.fillRect(0, 0, canvas.width, canvas.height);
             updateColor();
             if (backupData) {
                 ctx.putImageData(backupData, 0, 0);
@@ -145,6 +156,8 @@
 
         if (ctx) {
             ctx.lineWidth = lineWidth;
+            ctx.fillStyle = "white";
+            ctx.fillRect(0, 0, canvas.width, canvas.height);
             updateColor();
             datas.push(ctx.getImageData(0, 0, canvas.width, canvas.height));
             datasCursor++;
